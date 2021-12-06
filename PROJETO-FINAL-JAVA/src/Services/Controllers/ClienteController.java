@@ -31,7 +31,7 @@ public class ClienteController {
 
         try{
             String sql = "INSERT INTO Cliente " +
-                    "(nome, cpf, endereço, email)" +
+                    "(nome, cpf, endereco, email)" +
                     "VALUES (?,?,?,?)";
 
             PreparedStatement statement = conexao.prepareStatement(sql);

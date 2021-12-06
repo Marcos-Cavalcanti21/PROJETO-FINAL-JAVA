@@ -45,5 +45,5 @@ CREATE TABLE Pedido(
     idSuco INT,
     idGuarnicao INT,
     idCliente INT NOT NULL,
-    idFincionario INT NOT NULL
+    idFuncionario INT NOT NULL
 );

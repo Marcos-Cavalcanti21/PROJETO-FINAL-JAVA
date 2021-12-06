@@ -1,7 +1,8 @@
 package Model;
 
 public class Pedido {
-    private int idSanduiche,
+    private int idPedido,
+                idSanduiche,
                 idSuco,
                 idGuarnicao,
                 idCliente,
@@ -9,12 +10,21 @@ public class Pedido {
 
     public Pedido() {}
 
-    public Pedido(int idSanduiche, int idSuco, int idGuarnicao, int idCliente, int idFuncionario) {
+    public Pedido(int idPedido, int idSanduiche, int idSuco, int idGuarnicao, int idCliente, int idFuncionario) {
+        this.idPedido = idPedido;
         this.idSanduiche = idSanduiche;
         this.idSuco = idSuco;
         this.idGuarnicao = idGuarnicao;
         this.idCliente = idCliente;
         this.idFuncionario = idFuncionario;
+    }
+
+    public int getIdPedido() {
+        return idPedido;
+    }
+
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
     public int getIdSanduiche() {
@@ -56,4 +66,6 @@ public class Pedido {
     public void setIdFuncionario(int idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
+
+
 }

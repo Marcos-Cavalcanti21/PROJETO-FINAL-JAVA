@@ -1,15 +1,12 @@
 package Services.Controllers;
 
 
-import Model.Guarnicao;
-import Model.Pedido;
-import Model.Sanduiche;
-import Model.Suco;
+import Model.*;
 import Services.ConectDB.ConexaoMySQL;
 import Services.Get;
-import View.Menu;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -17,8 +14,9 @@ public class PedidoController {
 
     public static void sellPedidos(ArrayList<Sanduiche>lSand,
                                   ArrayList<Guarnicao>lGuarn,
-                                  ArrayList<Suco>lSuco){
-        int sanduiche, guarnicao, suco, O = 0;
+                                  ArrayList<Suco>lSuco,
+                                  ArrayList<Cliente>lCliente){
+        int sanduiche = 0, guarnicao = 0, suco = 0, cliente = 0, O = 0;
         while (O==0){
             System.out.println("\n\n== Selecione o Lanche para venda: ==");
             System.out.println("\n----------------------------------------");
@@ -29,7 +27,7 @@ public class PedidoController {
             System.out.println("\t(5)FINALIZAR");
             System.out.println("\t(0)SAIR");
             int selected = Get.integer();
-            Pedido pedido = new Pedido(sanduiche,guarnicao, suco,0,0);
+
 
             switch (selected){
                 default:
@@ -37,26 +35,78 @@ public class PedidoController {
                     break;
 
                 case 1:
-                    imprimirSanduiche(lSand);
-                    System.out.println("Qual Index deseja? ");
-                    sanduiche = Get.integer();
+                    if (lSand.isEmpty()){
+                        imprimirSanduiche(lSand);
+                    } else {
+                        imprimirSanduiche(lSand);
+                        System.out.println("Qual Index deseja? ");
+                        sanduiche = Get.integer();
+                    }
                     break;
                 case 2:
-                    imprimirGuarnicao(lGuarn);
-                    System.out.println("Qual Index deseja? ");
-                    guarnicao = Get.integer();
+                    if(lCliente.isEmpty()){
+                        imprimirGuarnicao(lGuarn);
+                    }else {
+                        imprimirGuarnicao(lGuarn);
+                        System.out.println("Qual Index deseja? ");
+                        guarnicao = Get.integer();
+                    }
                     break;
                 case 3:
-                    imprimirSuco(lSuco);
-                    System.out.println("Qual Index deseja? ");
-                    suco = Get.integer();
+                    if (lSuco.isEmpty()){
+                        imprimirSuco(lSuco);
+                    } else {
+                        imprimirSuco(lSuco);
+                        System.out.println("Qual Index deseja? ");
+                        suco = Get.integer();
+                    }
                     break;
+
+                case 4:
+                    if (lCliente.isEmpty()){
+                        ClienteController.imprimirCliente(lCliente);
+                    } else {
+                        ClienteController.imprimirCliente(lCliente);
+                        System.out.println("Qual Index deseja? ");
+                        cliente = Get.integer();
+                    }
+                    break;
+
                 case 5:
+                    if (cliente != 0) {
+                        if (suco != 0 || sanduiche != 0 || guarnicao != 0) {
+                            Pedido p = new Pedido(0, sanduiche, suco, guarnicao, cliente, 0);
+                            Funcionario f = new Funcionario();
 
-                    finalizarPedido(sanduiche, guarnicao, suco);
+                            Connection conexao = ConexaoMySQL.getConexaoMySQL();
 
+                            try {
+                                String sql = "INSERT INTO Pedido" +
+                                        "(idSanduiche, idSuco, idGuarnicao, idCliente, idFuncionario)" +
+                                        "VALUES (?,?,?,?,?)";
 
+                                PreparedStatement statement = conexao.prepareStatement(sql);
+                                statement.setInt(1, p.getIdSanduiche());
+                                statement.setInt(2, p.getIdSuco());
+                                statement.setInt(3, p.getIdGuarnicao());
+                                statement.setInt(4, p.getIdCliente());
+                                statement.setInt(5, f.getId());
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ConexaoMySQL.fecharConexao();
+
+                        } else {
+                            System.out.println("Ao menos um Lanche deve ser selecionado");
+                            System.out.println("É Obrigatorio selecionar um cliente");
+                        }
+                    }else {
+                        System.out.println("Ao menos um Lanche deve ser selecionado");
+                        System.out.println("É Obrigatorio selecionar um cliente");
+                    }
                     break;
+
                 case 0:
                     O = 1;
                     break;
@@ -67,7 +117,7 @@ public class PedidoController {
 
     }
 
-    public static void getPedidos(ArrayList<Sanduiche>lSand,
+    public static void showPedidos(ArrayList<Sanduiche>lSand,
                                   ArrayList<Guarnicao>lGuarn,
                                   ArrayList<Suco>lSuco){
 
@@ -103,9 +153,31 @@ public class PedidoController {
         }
     }
 
-    public static void finalizarPedido(ArrayList<Pedido>list){
-        System.out.println(sanduiche + guarnicao + suco);
+    public static ArrayList<Pedido> getPedidos(){
+        Connection conexao = ConexaoMySQL.getConexaoMySQL();
+        ArrayList<PedidoNome> lista = new ArrayList<>();
+        imprimirPedido(getPedidos());
+        ArrayList<PedidoNome> listaP = new ArrayList<PedidoNome>();
+        lista.
 
+
+        try{
+            String sql = "SELECT nome FROM Sanduiche WHERE id LIKE \""+ id +"\"";
+        }
+    }
+
+    public static void imprimirPedido(ArrayList<Pedido> l){
+        System.out.println("\n\n===== RELATORIO GERAL DE SANDUICHES =====");
+
+        if (l.isEmpty()){
+            System.out.println("\n-------------------------------------------");
+            System.out.println("------- Não há Pedidos cadastrados --------");
+            System.out.println("-------------------------------------------");
+        }else {
+            for (Pedido p : l) {
+                System.out.println("");
+            }
+        }
     }
 
     public static void imprimirSanduiche(ArrayList<Sanduiche> l){
