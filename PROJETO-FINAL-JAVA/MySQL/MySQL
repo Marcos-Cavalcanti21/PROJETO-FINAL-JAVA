@@ -1,0 +1,49 @@
+
+/*
+create DATABASE lanchonetedb;
+*/
+
+CREATE TABLE Funcionario(
+    id int(9) PRIMARY KEY AUTO_INCREMENT,
+	nome varchar(100) UNIQUE not null,
+    pass varchar (32) not null,
+    email varchar (100),
+    permission_root binary
+);
+
+CREATE TABLE Cliente(
+    id int(9) PRIMARY KEY AUTO_INCREMENT,
+	nome varchar(100) UNIQUE not null,
+    cpf varchar(11),
+    endereco varchar(255),
+    email varchar (100)
+);
+
+create table Sanduiche(
+	id int(9) primary key auto_increment,
+	nome varchar(32) unique,
+    ingrediente varchar(255),
+    preco float
+);
+
+create table Suco(
+	id int(9) primary key auto_increment,
+	sabor varchar(32) unique,
+    ingrediente varchar(255),
+    preco float
+);
+
+create table Guarnicao(
+	id int(9) primary key auto_increment,
+	nome varchar(32) unique,
+    preco float
+);
+
+CREATE TABLE Pedido(
+	id INT(9) PRIMARY KEY AUTO_INCREMENT,
+	idSanduiche INT,
+    idSuco INT,
+    idGuarnicao INT,
+    idCliente INT NOT NULL,
+    idFincionario INT NOT NULL
+);
