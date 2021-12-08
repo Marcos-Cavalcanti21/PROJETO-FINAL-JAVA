@@ -41,9 +41,9 @@ create table Guarnicao(
 
 CREATE TABLE Pedido(
 	id INT(9) PRIMARY KEY AUTO_INCREMENT,
-	idSanduiche INT,
-    idSuco INT,
-    idGuarnicao INT,
-    idCliente INT NOT NULL,
-    idFuncionario INT NOT NULL
+	idSanduiche INT(9),
+    idSuco INT(9),
+    idGuarnicao INT(9),
+    idCliente INT(9) NOT NULL,
+    idFuncionario INT(9) NOT NULL
 );

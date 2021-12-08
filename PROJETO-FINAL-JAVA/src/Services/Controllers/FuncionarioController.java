@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import static View.Menu.PDV;
 
 public class FuncionarioController implements IrootAcess {
+    public static int idLogin;
 
     public static void cadastrar (){
         String nome;
@@ -90,6 +91,9 @@ public class FuncionarioController implements IrootAcess {
                     System.out.println("\n\nLogin ou senha invalidos");
                 }else {
                     for (Login l : login){
+                        int idLogin = FuncionarioController.idLogin;
+                        idLogin = l.getId();
+                        FuncionarioController.idLogin = idLogin;
 
                         System.out.println("\n\n==========================");
                         System.out.println("\t Usuario: " + l.getLogin());
@@ -105,6 +109,7 @@ public class FuncionarioController implements IrootAcess {
 
                         }
                     }
+
 
                 }
             } catch (Exception e) {

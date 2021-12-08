@@ -41,9 +41,6 @@ public class Menu {
     }
 
 
-
-
-
     public static void inicio(){
         while (0==0){
             System.out.println("\n\n================================");
@@ -98,7 +95,7 @@ public class Menu {
             System.out.println("========= Ponto de Vendas =========");
             System.out.println("===================================");
             System.out.println("(1)Vender Combo");
-            System.out.println("(2)Ver Pedidos");
+            System.out.println("(2)Ver Lanches");
             System.out.println("(3)Cadastrar Cliente");
             System.out.println("(0)LOGOFF");
             int selected = Get.integer();
@@ -114,7 +111,8 @@ public class Menu {
                     PedidoController.sellPedidos(LancheController.getSanduiche(),
                                                  LancheController.getGuarnicao(),
                                                  LancheController.getSuco(),
-                                                 ClienteController.getCliente());
+                                                 ClienteController.getCliente(),
+                                                 PedidoController.getPedidos());
                     break;
 
                 case 2:

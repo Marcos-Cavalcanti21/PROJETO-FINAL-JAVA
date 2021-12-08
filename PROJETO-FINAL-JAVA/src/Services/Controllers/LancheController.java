@@ -74,7 +74,7 @@ public class LancheController {
 
             PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setString(1,g.getNome());
-            statement.setDouble(3,g.getPreco());
+            statement.setDouble(2,g.getPreco());
 
             int rows = statement.executeUpdate();
 

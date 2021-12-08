@@ -2,19 +2,16 @@ package Model;
 
 public class PedidoNome {
     private String sanduiche,
-                   suco,
                    guarnicao,
-                   cliente,
-                   funcionario;
+                   suco;
 
     public PedidoNome() {}
 
-    public PedidoNome(String sanduiche, String suco, String guarnicao, String cliente, String funcionario) {
+    public PedidoNome(String sanduiche, String guarnicao, String suco) {
         this.sanduiche = sanduiche;
-        this.suco = suco;
         this.guarnicao = guarnicao;
-        this.cliente = cliente;
-        this.funcionario = funcionario;
+        this.suco = suco;
+
     }
 
     public String getSanduiche() {
@@ -39,21 +36,5 @@ public class PedidoNome {
 
     public void setGuarnicao(String guarnicao) {
         this.guarnicao = guarnicao;
-    }
-
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getFuncionario() {
-        return funcionario;
-    }
-
-    public void setFuncionario(String funcionario) {
-        this.funcionario = funcionario;
     }
 }
