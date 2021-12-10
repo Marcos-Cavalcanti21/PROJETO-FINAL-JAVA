@@ -1,17 +1,17 @@
 package Model;
 
 public class Pedido {
-    private int idPedido,
-                idSanduiche,
-                idSuco,
-                idGuarnicao,
-                idCliente,
-                idFuncionario;
+    private int id;
+    private int idSanduiche;
+    private int idSuco;
+    private int idGuarnicao;
+    private int idCliente;
+    private int idFuncionario;
 
-    public Pedido() {}
+    public Pedido(){}
 
-    public Pedido(int idPedido, int idSanduiche, int idSuco, int idGuarnicao, int idCliente, int idFuncionario) {
-        this.idPedido = idPedido;
+    public Pedido(int id, int idSanduiche, int idSuco, int idGuarnicao, int idCliente, int idFuncionario) {
+        this.id = id;
         this.idSanduiche = idSanduiche;
         this.idSuco = idSuco;
         this.idGuarnicao = idGuarnicao;
@@ -19,12 +19,12 @@ public class Pedido {
         this.idFuncionario = idFuncionario;
     }
 
-    public int getIdPedido() {
-        return idPedido;
+    public int getId() {
+        return id;
     }
 
-    public void setIdPedido(int idPedido) {
-        this.idPedido = idPedido;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getIdSanduiche() {
@@ -66,6 +66,4 @@ public class Pedido {
     public void setIdFuncionario(int idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package Services.Controllers;
 
+import Model.Cliente;
 import Model.IrootAcess;
 import Model.Funcionario;
 import Model.Login;
@@ -8,6 +9,7 @@ import Services.Get;
 import View.Menu;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static View.Menu.PDV;
@@ -95,15 +97,21 @@ public class FuncionarioController implements IrootAcess {
                         idLogin = l.getId();
                         FuncionarioController.idLogin = idLogin;
 
-                        System.out.println("\n\n==========================");
-                        System.out.println("\t Usuario: " + l.getLogin());
-                        System.out.println("\t Logado com Sucesso");
-                        System.out.println("==========================");
 
                         if (l.getId() == 1){
+                            System.out.println("\n\n==================================");
+                            System.out.println("\t Administrador: " + l.getLogin());
+                            System.out.println("\t Logado com Sucesso");
+                            System.out.println("==================================");
+
                             ConexaoMySQL.fecharConexao();
                             Menu.inicio();
                         }else {
+                            System.out.println("\n\n==================================");
+                            System.out.println("\t Usuario: " + l.getLogin());
+                            System.out.println("\t Logado com Sucesso");
+                            System.out.println("==================================");
+
                             ConexaoMySQL.fecharConexao();
                             PDV();
 
@@ -147,6 +155,29 @@ public class FuncionarioController implements IrootAcess {
         }
         ConexaoMySQL.fecharConexao();
         return funcList;
+    }
+
+    public static void imprimirFuncionario(ArrayList<Funcionario> l){
+        System.out.println("\n\n=======RELATÓRIO GERAL DE CLIENTES========");
+
+        if (l.isEmpty()){
+            System.out.println("\n----------------------------------------");
+            System.out.println("------ Não há funcionarios cadastrados ------");
+            System.out.println("----------------------------------------");
+        }else {
+            for (Funcionario f : l){
+                System.out.println("-----------------------------------------------------------------------");
+                System.out.println("ID: " + f.getId());
+                System.out.println("Nome: " + f.getNome());
+                System.out.println("Senha: " + f.getPass());
+                if (f.getEmail().isEmpty()){
+                }else{
+                    System.out.println("E-Mail: " + f.getEmail());
+                }
+            }
+            LocalDate data = LocalDate.now();
+            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+        }
     }
 
 

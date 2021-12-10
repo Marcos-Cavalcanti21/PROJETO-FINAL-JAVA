@@ -2,12 +2,27 @@ package Main;
 
 import View.Menu;
 
+import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import java.awt.*;
+
 public class Main {
     public static void main(String[] args) {
        //Carregar informação de Root do banco em um array
+/*
+        JFrame janela = new JFrame();
 
+        janela.setSize(300,200);
+        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container contentPane = janela.getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        janela.setLocationRelativeTo(null);
+        janela.setVisible(true);
 
+*/
         Menu.login();
+
+
 
     }
 }

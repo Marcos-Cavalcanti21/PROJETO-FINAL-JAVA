@@ -6,7 +6,9 @@ import Services.Controllers.ClienteController;
 import Services.Controllers.FuncionarioController;
 import Services.Controllers.LancheController;
 import Services.Controllers.PedidoController;
+import Services.Delete;
 import Services.Get;
+import Services.PrintToArquive;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,15 @@ public class Menu {
                     System.exit(2);
                     break;
 
+                case 3:
+                    PrintToArquive.writeArquive();
+                    break;
+
+                case 4:
+                    PrintToArquive.readArquive();
+                    break;
+
+
             }
         }
     }
@@ -44,13 +55,14 @@ public class Menu {
     public static void inicio(){
         while (0==0){
             System.out.println("\n\n================================");
-            System.out.println("======Sistema de Cadastro=======");
+            System.out.println("===== Sistema de Cadastro ======");
             System.out.println("================================");
             System.out.println("\t(1)SANDUICHES");
             System.out.println("\t(2)GUARNIÇÕES");
             System.out.println("\t(3)SUCOS");
             System.out.println("\t(4)FUNCIONAROS");
             System.out.println("\t(5)CLIENTES");
+            System.out.println("\t(6)EXCLUIR");
             System.out.println("\t(0)LOGOFF");
             int selected = Get.integer();
 
@@ -77,7 +89,13 @@ public class Menu {
                     ClienteController.cadastrar();
                     break;
 
-
+                case 6:
+                    Delete.deleteIndex(LancheController.getSanduiche(),
+                            LancheController.getGuarnicao(),
+                            LancheController.getSuco(),
+                            ClienteController.getCliente(),
+                            FuncionarioController.getFuncionario());
+                    break;
 
                 case 0:
                     login();
@@ -85,8 +103,6 @@ public class Menu {
 
             }
         }
-
-
     }
 
     public static void PDV(){
