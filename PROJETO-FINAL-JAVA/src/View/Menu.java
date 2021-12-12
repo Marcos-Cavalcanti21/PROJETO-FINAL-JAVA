@@ -113,6 +113,7 @@ public class Menu {
             System.out.println("(1)Vender Combo");
             System.out.println("(2)Ver Lanches");
             System.out.println("(3)Cadastrar Cliente");
+            System.out.println("(4)Ver Pedidos");
             System.out.println("(0)LOGOFF");
             int selected = Get.integer();
 
@@ -128,7 +129,7 @@ public class Menu {
                                                  LancheController.getGuarnicao(),
                                                  LancheController.getSuco(),
                                                  ClienteController.getCliente(),
-                                                 PedidoController.getPedidos());
+                                                 PedidoController.getPedidos(PedidoController.getPedidoBase()));
                     break;
 
                 case 2:
@@ -139,6 +140,9 @@ public class Menu {
                 case 3:
                     ClienteController.cadastrar();
                     break;
+
+                case 4:
+                    PedidoController.imprimirPedido(PedidoController.getPedidos(PedidoController.getPedidoBase()));
 
                 case 0:
                     login();

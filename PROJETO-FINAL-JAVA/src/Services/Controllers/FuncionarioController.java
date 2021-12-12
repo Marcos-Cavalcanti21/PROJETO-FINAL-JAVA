@@ -47,8 +47,6 @@ public class FuncionarioController implements IrootAcess {
             statement.setString(3, p.getEmail());
             statement.setBoolean(4, p.getRoot());
 
-
-
             int rows = statement.executeUpdate();
 
             if(rows>0){

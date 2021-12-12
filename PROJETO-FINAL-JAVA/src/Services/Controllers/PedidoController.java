@@ -84,6 +84,7 @@ public class PedidoController {
                         if (suco != 0 || sanduiche != 0 || guarnicao != 0) {
 
                             setPedidos();
+                            getPedidos(getPedidoBase());
                             imprimirPedido(lPedido);
 
                         } else {
@@ -154,7 +155,6 @@ public class PedidoController {
                     "VALUES (?,?,?,?,?)";
 
             PreparedStatement statement = conexao.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
 
             statement.setInt(1, p.getIdSanduiche());
             statement.setInt(2, p.getIdSuco());
@@ -162,21 +162,12 @@ public class PedidoController {
             statement.setInt(4, p.getIdCliente());
             statement.setInt(5, p.getIdFuncionario());
 
-            System.out.println("\n\n=======Debugando Pedido=======\n");
-            System.out.println(p.getId());
-            System.out.println(p.getIdSanduiche());
-            System.out.println(p.getIdSuco());
-            System.out.println(p.getIdGuarnicao());
-            System.out.println(p.getIdCliente());
-            System.out.println(p.getIdFuncionario());
-
-            System.out.println("\n\n=======Debugando Pedido=======\n");
-
-            System.out.println("\n\n");
-
-            System.out.println("\n\n-------------------------------");
-            System.out.println("  Pedido efetuado com sucesso");
-            System.out.println("-------------------------------\n\n");
+            int rows = statement.executeUpdate();
+            if (rows>0) {
+                System.out.println("\n\n-------------------------------");
+                System.out.println("  Pedido efetuado com sucesso");
+                System.out.println("-------------------------------\n\n");
+            }
 
             } catch (SQLException throwables) {
                throwables.printStackTrace();
@@ -184,52 +175,89 @@ public class PedidoController {
         ConexaoMySQL.fecharConexao();
     }
 
-    public static ArrayList<PedidoNome> getPedidos(){
+    public static ArrayList<PedidoNome> getPedidos(ArrayList<Pedido> pedido){
         Connection conexao = ConexaoMySQL.getConexaoMySQL();
         ArrayList<PedidoNome> pedidoNome = new ArrayList<>();
-        ArrayList<Pedido> pedido = new ArrayList<>();
 
 
-        int idSanduiche, idGuarnicao, idSuco;
+        int idPedido = 0, idCliente = 0, idSanduiche = 0, idGuarnicao = 0, idSuco = 0;
 
-        for (PedidoNome p : pedidoNome){
-            idSanduiche = sanduiche; //p.getIdSanduiche();
-            idGuarnicao = guarnicao; //p.getIdGuarnicao();
-            idSuco = suco; //p.getIdSuco();
+        for (Pedido p : pedido) {
+            idPedido = p.getId();
+            idCliente = p.getIdCliente();
+            idSanduiche = p.getIdSanduiche();
+            idGuarnicao = p.getIdGuarnicao();
+            idSuco = p.getIdSuco();
 
-            try{
-                String sql = "SELECT Sanduiche.nome, Guarnicao.nome, Suco.sabor from Sanduiche, Guarnicao," +
-                             "Suco WHERE Sanduiche.id LIKE \""+ idSanduiche +
-                             "\"and Guarnicao.id LIKE \""+ idGuarnicao +
-                             "\" and Suco.id LIKE \""+ idSuco + "\"";
+
+            try {
+                String Id =  "Select id from Pedidos Where Pedidos.id Like "+ idPedido +";";
+                String Client = "Select nome from Cliente Where Cliente.id Like "+ idCliente +";";
+                String Sand = "Select nome from Sanduiche Where Sanduiche.id Like "+ idSanduiche +";";
+                String Guarn = "Select nome from Guarnicao Where Guarnicao.id Like "+ idGuarnicao +";";
+                String Suco = "Select sabor from Suco Where Suco.id Like "+ idSuco +";";
+
 
                 Statement statement = conexao.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
+                ResultSet id = statement.executeQuery(Id);
+                ResultSet client = statement.executeQuery(Client);
+                ResultSet sand = statement.executeQuery(Sand);
+                ResultSet guarn = statement.executeQuery(Guarn);
+                ResultSet suco = statement.executeQuery(Suco);
 
-                while (resultSet.next()){
+
                     pedidoNome.add(new PedidoNome(
-                            resultSet.getString("Sanduiche.nome"),
-                            resultSet.getString("Guarnicao.nome"),
-                            resultSet.getString("Suco.sabor")
+
+                            id.getInt("Pedido.id"),
+                            client.getString("Cliente.nome"),
+                            sand.getString("Sanduiche.nome"),
+                            guarn.getString("Guarnicao.nome"),
+                            suco.getString("Suco.sabor")
                     ));
 
-                    System.out.println("Nome Sanduiche: " + p.getSanduiche());
-                    System.out.println("Nome Guarnição" + p.getGuarnicao());
-                    System.out.println("Nome Suco" + p.getSuco());
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             ConexaoMySQL.fecharConexao();
         }
 
 
+
         return pedidoNome;
+    }
+    
+    public static ArrayList<Pedido> getPedidoBase(){
+        
+        ArrayList<Pedido> lPedido = new ArrayList<>();
+        Connection conexao = ConexaoMySQL.getConexaoMySQL();
+        
+        try {
+            String sql = "SELECT * FROM Pedidos";
+            Statement statement = conexao.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            
+            while (resultSet.next()){
+                lPedido.add(new Pedido(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("idSanduiche"),
+                        resultSet.getInt("idSuco"),
+                        resultSet.getInt("idGuarnicao"),
+                        resultSet.getInt("idCliente"),
+                        resultSet.getInt("idFuncionario")
+                ));
+            }
+        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }ConexaoMySQL.fecharConexao();
+        return lPedido;
     }
 
     public static void imprimirPedido(ArrayList<PedidoNome> l){
         System.out.println("\n\n===== RELATORIO GERAL DE PEDIDOS =====");
+
 
         if (l.isEmpty()){
             System.out.println("\n-------------------------------------------");
@@ -237,10 +265,22 @@ public class PedidoController {
             System.out.println("-------------------------------------------");
         }else {
             for (PedidoNome p : l) {
-                System.out.println("\t- " + p.getSanduiche());
-                System.out.println("\t- " + p.getGuarnicao());
-                System.out.println("\t- " + p.getSuco());
+                System.out.println("------------------------------------------------------------------------");
+                System.out.println("Pedido para o cliente: " + p.getCliente());
+                System.out.println("\t- Numero do pedido" + p.getId());
+                if(p.getSanduiche().isEmpty()){}else{
+                    System.out.println("\t- Sanduiche: " + p.getSanduiche());
+                }
+                if(p.getSanduiche().isEmpty()){}else {
+                    System.out.println("\t- Guarnição: " + p.getGuarnicao());
+                }
+                if(p.getSanduiche().isEmpty()){}else {
+                    System.out.println("\t- Bebida: " + p.getSuco());
+                }
+
             }
+            LocalDate data = LocalDate.now();
+            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
         }
     }
 
