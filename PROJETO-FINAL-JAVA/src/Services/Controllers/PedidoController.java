@@ -191,30 +191,28 @@ public class PedidoController {
 
 
             try {
-                String Id =  "Select id from Pedidos Where Pedidos.id Like "+ idPedido +";";
-                String Client = "Select nome from Cliente Where Cliente.id Like "+ idCliente +";";
-                String Sand = "Select nome from Sanduiche Where Sanduiche.id Like "+ idSanduiche +";";
-                String Guarn = "Select nome from Guarnicao Where Guarnicao.id Like "+ idGuarnicao +";";
-                String Suco = "Select sabor from Suco Where Suco.id Like "+ idSuco +";";
+                String sql =  "SELECT Cliente.nome, Sanduiche.nome, Guarnicao.nome, Suco.sabor from Sanduiche, Guarnicao," +
+                                                "Suco WHERE Pedidos.id LIKE \""+ idPedido +
+                                                    "\" Cliente.id LIKE \""+ idCliente +
+                                                    "\" Sanduiche.id LIKE \""+ idSanduiche +
+                                                "\" and Guarnicao.id LIKE \""+ idGuarnicao +
+                                                "\" and Suco.id LIKE \""+ idSuco + "\"";
 
 
                 Statement statement = conexao.createStatement();
-                ResultSet id = statement.executeQuery(Id);
-                ResultSet client = statement.executeQuery(Client);
-                ResultSet sand = statement.executeQuery(Sand);
-                ResultSet guarn = statement.executeQuery(Guarn);
-                ResultSet suco = statement.executeQuery(Suco);
+                ResultSet resultSet = statement.executeQuery(sql);
 
 
-                    pedidoNome.add(new PedidoNome(
+                    while(resultSet.next()) {
+                        pedidoNome.add(new PedidoNome(
 
-                            id.getInt("Pedido.id"),
-                            client.getString("Cliente.nome"),
-                            sand.getString("Sanduiche.nome"),
-                            guarn.getString("Guarnicao.nome"),
-                            suco.getString("Suco.sabor")
-                    ));
-
+                                resultSet.getInt("Pedido.id"),
+                                resultSet.getString("Cliente.nome"),
+                                resultSet.getString("Sanduiche.nome"),
+                                resultSet.getString("Guarnicao.nome"),
+                                resultSet.getString("Suco.sabor")
+                        ));
+                    }
 
             } catch (Exception e) {
                 e.printStackTrace();
