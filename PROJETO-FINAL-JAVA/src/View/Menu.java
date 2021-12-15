@@ -143,7 +143,7 @@ public class Menu {
 
                 case 4:
                     PedidoController.imprimirPedido(PedidoController.getPedidos(PedidoController.getPedidoBase()));
-
+                    break;
                 case 0:
                     login();
                     break;

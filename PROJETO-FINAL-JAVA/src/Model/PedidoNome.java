@@ -5,25 +5,23 @@ public class PedidoNome {
     private String cliente,
                    sanduiche,
                    guarnicao,
-                   suco;
+                   suco,
+                   Funcionario;
 
     public PedidoNome() {}
 
-    public PedidoNome(int id, String cliente, String sanduiche, String guarnicao, String suco) {
+    public PedidoNome(int id, String cliente, String sanduiche, String guarnicao, String suco, String funcionario) {
         this.id = id;
         this.cliente = cliente;
         this.sanduiche = sanduiche;
         this.guarnicao = guarnicao;
         this.suco = suco;
+        Funcionario = funcionario;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() {return id;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) {this.id = id;}
 
     public String getCliente() {
         return cliente;
@@ -56,4 +54,8 @@ public class PedidoNome {
     public void setGuarnicao(String guarnicao) {
         this.guarnicao = guarnicao;
     }
+
+    public String getFuncionario() {return Funcionario;}
+
+    public void setFuncionario(String funcionario) {Funcionario = funcionario;}
 }

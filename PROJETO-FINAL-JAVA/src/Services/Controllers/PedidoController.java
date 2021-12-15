@@ -81,7 +81,7 @@ public class PedidoController {
 
                 case 5:
                     if (cliente != 0) {
-                        if (suco != 0 || sanduiche != 0 || guarnicao != 0) {
+                        if (suco != 0 && sanduiche != 0 && guarnicao != 0) {
 
                             setPedidos();
                             getPedidos(getPedidoBase());
@@ -180,7 +180,7 @@ public class PedidoController {
         ArrayList<PedidoNome> pedidoNome = new ArrayList<>();
 
 
-        int idPedido = 0, idCliente = 0, idSanduiche = 0, idGuarnicao = 0, idSuco = 0;
+        int idPedido = 0, idCliente = 0, idSanduiche = 0, idGuarnicao = 0, idSuco = 0, idFuncionario = 0;
 
         for (Pedido p : pedido) {
             idPedido = p.getId();
@@ -188,15 +188,18 @@ public class PedidoController {
             idSanduiche = p.getIdSanduiche();
             idGuarnicao = p.getIdGuarnicao();
             idSuco = p.getIdSuco();
+            idFuncionario = p.getIdFuncionario();
 
 
             try {
-                String sql =  "SELECT Cliente.nome, Sanduiche.nome, Guarnicao.nome, Suco.sabor from Sanduiche, Guarnicao," +
-                                                "Suco WHERE Pedidos.id LIKE \""+ idPedido +
-                                                    "\" Cliente.id LIKE \""+ idCliente +
-                                                    "\" Sanduiche.id LIKE \""+ idSanduiche +
+                String sql =  "SELECT Pedido.id, Cliente.nome, Sanduiche.nome, Guarnicao.nome, Suco.sabor," +
+                              " Funcionario.nome from Pedido, Cliente, Sanduiche, Guarnicao," +
+                                                "Suco, Funcionario WHERE Pedidos.id LIKE \""+ idPedido +
+                                                "\" and Cliente.id LIKE \""+ idCliente +
+                                                "\" and Sanduiche.id LIKE \""+ idSanduiche +
                                                 "\" and Guarnicao.id LIKE \""+ idGuarnicao +
-                                                "\" and Suco.id LIKE \""+ idSuco + "\"";
+                                                "\" and Suco.id LIKE \""+ idSuco + "\"" +
+                                                "\" and Funcionario.id LIKE \""+ idFuncionario + "\"";
 
 
                 Statement statement = conexao.createStatement();
@@ -210,7 +213,8 @@ public class PedidoController {
                                 resultSet.getString("Cliente.nome"),
                                 resultSet.getString("Sanduiche.nome"),
                                 resultSet.getString("Guarnicao.nome"),
-                                resultSet.getString("Suco.sabor")
+                                resultSet.getString("Suco.sabor"),
+                                resultSet.getString("Funcionario.nome")
                         ));
                     }
 
@@ -285,22 +289,23 @@ public class PedidoController {
     public static void imprimirSanduiche(ArrayList<Sanduiche> l){
         System.out.println("\n\n=======RELATÓRIO GERAL DE SANDUICHES========");
 
-        if (l.isEmpty()){
-            System.out.println("\n-------------------------------------------");
-            System.out.println("------ Não há Sanduiches cadastrados ------");
-            System.out.println("-------------------------------------------");
-        }else {
             for (Sanduiche s : l){
-                System.out.println("-----------------------------------------------------------------------");
-                System.out.println("ID: " + s.getId());
-                System.out.println("Nome: " + s.getNome());
-                System.out.println("Ingredientes: " + s.getIngrediente());
-                System.out.println("Preço R$: " + s.getPreço());
+                if (s.getId() == 1){
+                    System.out.println("\n------ "+ s.getNome() +" ------");
+
+                }else if (s.getId() <= 2){
+                    System.out.println("-----------------------------------------------------------------------");
+                    System.out.println("ID: " + s.getId());
+                    System.out.println("Nome: " + s.getNome());
+                    System.out.println("Ingredientes: " + s.getIngrediente());
+                    System.out.println("Preço R$: " + s.getPreço());
+                }
             }
+        System.out.println("A opção 1 se refere a vázio");
             LocalDate data = LocalDate.now();
             System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
         }
-    }
+
 
     public static void imprimirGuarnicao(ArrayList< Guarnicao > l){
         System.out.println("\n\n=======RELATÓRIO GERAL DE GUARNIÇÕES========");

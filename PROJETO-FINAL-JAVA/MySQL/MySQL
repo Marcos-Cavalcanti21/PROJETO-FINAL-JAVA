@@ -47,3 +47,15 @@ CREATE TABLE Pedidos(
     idCliente int(9),
     idFuncionario int(9)
 );
+
+-- Faz a inserção de campos vazios nos lanches para o programa final.
+-- Deve ser executado no banco antes de rodar o programa --
+
+INSERT INTO Sanduiche (nome)
+VALUES ('Vazio');
+
+INSERT INTO Guarnicao (nome)
+VALUES ('Vazio');
+
+INSERT INTO Suco (sabor)
+VALUES ('Vazio');
