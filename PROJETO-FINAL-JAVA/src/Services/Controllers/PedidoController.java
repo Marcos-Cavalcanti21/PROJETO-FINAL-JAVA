@@ -4,6 +4,7 @@ package Services.Controllers;
 import Model.*;
 import Services.ConectDB.ConexaoMySQL;
 import Services.Get;
+import Services.PrintToArquive;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,9 +12,9 @@ import java.util.ArrayList;
 
 
 public class PedidoController {
-    static int sanduiche = 0,
-               guarnicao = 0,
-               suco = 0,
+    static int sanduiche = 1,
+               guarnicao = 1,
+               suco = 1,
                cliente = 0,
                funcionario = FuncionarioController.idLogin;
 
@@ -86,6 +87,7 @@ public class PedidoController {
                             setPedidos();
                             getPedidos(getPedidoBase());
                             imprimirPedido(lPedido);
+                            criarRelario();
 
                         } else {
                             System.out.println("Ao menos um Lanche deve ser selecionado");
@@ -143,6 +145,36 @@ public class PedidoController {
         }
     }
 
+
+    public static void criarRelario(){
+        int O = 0;
+        while (0==O){
+            System.err.println("\n\n============================================");
+            System.err.println("Deseja criar um relatorio geral Automático?");
+            System.err.println("\t(1)Sim");
+            System.err.println("\t(2)Não");
+            System.err.println("============================================");
+
+            int selected = Get.integer();
+
+            switch (selected){
+                default:
+                    System.err.println("Opção inválida!!");
+                    break;
+
+                case 1:
+                    PrintToArquive.writeArquive(getPedidos(getPedidoBase()));
+                    O = 1;
+                    break;
+
+                case 2:
+                    O = 1;
+                    break;
+            }
+
+        }
+    }
+
     public static void setPedidos(){
 
         Connection conexao = ConexaoMySQL.getConexaoMySQL();
@@ -192,13 +224,13 @@ public class PedidoController {
 
 
             try {
-                String sql =  "SELECT Pedido.id, Cliente.nome, Sanduiche.nome, Guarnicao.nome, Suco.sabor," +
-                              " Funcionario.nome from Pedido, Cliente, Sanduiche, Guarnicao," +
+                String sql =  "SELECT Pedidos.id, Cliente.nome, Sanduiche.nome, Guarnicao.nome, Suco.sabor," +
+                              " Funcionario.nome from Pedidos, Cliente, Sanduiche, Guarnicao," +
                                                 "Suco, Funcionario WHERE Pedidos.id LIKE \""+ idPedido +
                                                 "\" and Cliente.id LIKE \""+ idCliente +
                                                 "\" and Sanduiche.id LIKE \""+ idSanduiche +
                                                 "\" and Guarnicao.id LIKE \""+ idGuarnicao +
-                                                "\" and Suco.id LIKE \""+ idSuco + "\"" +
+                                                "\" and Suco.id LIKE \""+ idSuco +
                                                 "\" and Funcionario.id LIKE \""+ idFuncionario + "\"";
 
 
@@ -209,7 +241,7 @@ public class PedidoController {
                     while(resultSet.next()) {
                         pedidoNome.add(new PedidoNome(
 
-                                resultSet.getInt("Pedido.id"),
+                                resultSet.getInt("Pedidos.id"),
                                 resultSet.getString("Cliente.nome"),
                                 resultSet.getString("Sanduiche.nome"),
                                 resultSet.getString("Guarnicao.nome"),
@@ -261,6 +293,7 @@ public class PedidoController {
         System.out.println("\n\n===== RELATORIO GERAL DE PEDIDOS =====");
 
 
+
         if (l.isEmpty()){
             System.out.println("\n-------------------------------------------");
             System.out.println("------- Não há Pedidos cadastrados --------");
@@ -269,29 +302,30 @@ public class PedidoController {
             for (PedidoNome p : l) {
                 System.out.println("------------------------------------------------------------------------");
                 System.out.println("Pedido para o cliente: " + p.getCliente());
-                System.out.println("\t- Numero do pedido" + p.getId());
-                if(p.getSanduiche().isEmpty()){}else{
+                System.out.println("\t- Numero do pedido: " + p.getId());
+                if(p.getSanduiche() == "Vazio" ){}else {
                     System.out.println("\t- Sanduiche: " + p.getSanduiche());
                 }
-                if(p.getSanduiche().isEmpty()){}else {
+                if(p.getGuarnicao() == "Vazio" ){}else {
                     System.out.println("\t- Guarnição: " + p.getGuarnicao());
                 }
-                if(p.getSanduiche().isEmpty()){}else {
+                if(p.getSuco() == "Vazio" ){}else {
                     System.out.println("\t- Bebida: " + p.getSuco());
                 }
 
             }
             LocalDate data = LocalDate.now();
-            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+            System.out.println("\n---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
         }
     }
+
 
     public static void imprimirSanduiche(ArrayList<Sanduiche> l){
         System.out.println("\n\n=======RELATÓRIO GERAL DE SANDUICHES========");
 
             for (Sanduiche s : l){
                 if (s.getId() == 1){
-                    System.out.println("\n------ "+ s.getNome() +" ------");
+                    System.out.println("\n------ "+ s.getNome() +" ------\n");
 
                 }else if (s.getId() <= 2){
                     System.out.println("-----------------------------------------------------------------------");
@@ -301,48 +335,51 @@ public class PedidoController {
                     System.out.println("Preço R$: " + s.getPreço());
                 }
             }
-        System.out.println("A opção 1 se refere a vázio");
+        System.out.println("\nA opção 1 se refere a vázio");
             LocalDate data = LocalDate.now();
-            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+            System.out.println("\n---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+
         }
 
 
-    public static void imprimirGuarnicao(ArrayList< Guarnicao > l){
+    public static void imprimirGuarnicao(ArrayList< Guarnicao > l) {
         System.out.println("\n\n=======RELATÓRIO GERAL DE GUARNIÇÕES========");
 
-        if (l.isEmpty()){
-            System.out.println("\n-------------------------------------------");
-            System.out.println("------ Não há Guarnições cadastradas ------");
-            System.out.println("-------------------------------------------");
-        }else {
-            for (Guarnicao g : l){
+
+        for (Guarnicao g : l) {
+            if (g.getId() == 1) {
+                System.out.println("------ " + g.getNome() + " ------");
+            } else if (g.getId() <= 2) {
                 System.out.println("-----------------------------------------------------------------------");
                 System.out.println("ID: " + g.getId());
                 System.out.println("Nome: " + g.getNome());
                 System.out.println("Preço R$: " + g.getPreco());
             }
+            System.out.println("\nA opção 1 se refere a vázio");
             LocalDate data = LocalDate.now();
-            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+            System.out.println("\n---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
         }
     }
 
     public static void imprimirSuco(ArrayList< Suco > l){
         System.out.println("\n\n=======RELATÓRIO GERAL DE SUCOS========");
 
-        if (l.isEmpty()){
-            System.out.println("\n--------------------------------------");
-            System.out.println("------ Não há Sucos cadastrados ------");
-            System.out.println("--------------------------------------");
-        }else {
             for (Suco s : l){
-                System.out.println("-----------------------------------------------------------------------");
-                System.out.println("ID: " + s.getId());
-                System.out.println("Sabor: " + s.getSabor());
-                System.out.println("Ingredientes: " + s.getIngrediente());
-                System.out.println("Preço R$: " + s.getPreco());
+                if (s.getId() == 1){
+
+                    System.out.println("------" + s.getSabor() + "------");
+
+                } else if(s.getId() <= 2){
+                    System.out.println("-----------------------------------------------------------------------");
+                    System.out.println("ID: " + s.getId());
+                    System.out.println("Sabor: " + s.getSabor());
+                    System.out.println("Ingredientes: " + s.getIngrediente());
+                    System.out.println("Preço R$: " + s.getPreco());
+                }
             }
+            System.out.println("\nA opção 1 se refere a vázio");
             LocalDate data = LocalDate.now();
-            System.out.println("---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
+            System.out.println("\n---Relatorio gerado em: " + data.getDayOfMonth() + "/" + (data.getMonthValue()) + "/" + data.getYear() + "-------");
         }
     }
-}
+

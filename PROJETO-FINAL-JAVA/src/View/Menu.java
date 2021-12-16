@@ -38,13 +38,6 @@ public class Menu {
                     System.exit(2);
                     break;
 
-                case 3:
-                    PrintToArquive.writeArquive();
-                    break;
-
-                case 4:
-                    PrintToArquive.readArquive();
-                    break;
 
 
             }
@@ -114,6 +107,7 @@ public class Menu {
             System.out.println("(2)Ver Lanches");
             System.out.println("(3)Cadastrar Cliente");
             System.out.println("(4)Ver Pedidos");
+            System.out.println("(5)Ver Relatorio de pedidos");
             System.out.println("(0)LOGOFF");
             int selected = Get.integer();
 
@@ -143,6 +137,10 @@ public class Menu {
 
                 case 4:
                     PedidoController.imprimirPedido(PedidoController.getPedidos(PedidoController.getPedidoBase()));
+                    break;
+
+                case 5:
+                    PrintToArquive.readArquive();
                     break;
                 case 0:
                     login();
